@@ -52,5 +52,42 @@ public class Character : MonoBehaviour
 
     public void CastCombatAction(CombatAction combatAction)
     {
+        if (combatAction.Damage > 0)
+        {
+            StartCoroutine(AttackOpponent(combatAction));
+        }
+        else if (combatAction.ProjectitlePrefab != null)
+        {
+
+        }
+        else if (combatAction.HealAmount > 0)
+        {
+            Heal(combatAction.HealAmount);
+            TurnManager.Instance.EndTurn();
+        }
+    }
+
+    IEnumerator AttackOpponent(CombatAction combatAction)
+    {
+        while (transform.position != _opponent.transform.position)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _opponent.transform.position, 50f * Time.deltaTime);
+            yield return null;
+        }
+
+        _opponent.TakeDamage(combatAction.Damage);
+
+        while (transform.position != _startPos)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _startPos, 20f * Time.deltaTime);
+            yield return null;
+        }
+
+        TurnManager.Instance.EndTurn();
+    }
+
+    public float GetHealthPercentage()
+    {
+        return (float)CurHP / (float)MaxHP;
     }
 }
