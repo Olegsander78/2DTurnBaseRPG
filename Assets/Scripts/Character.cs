@@ -52,6 +52,5 @@ public class Character : MonoBehaviour
 
     public void CastCombatAction(CombatAction combatAction)
     {
-
     }
 }
